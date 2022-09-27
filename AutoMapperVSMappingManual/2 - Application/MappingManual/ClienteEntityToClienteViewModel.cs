@@ -17,7 +17,6 @@ namespace AutoMapperVSMappingManual._2___Application.MappingManual
 
             clienteView.ContatosDeEmergencia = new List<ContatosdeemergenciaView>();
 
-
             foreach (var contato in clienteEntity.ContatosDeEmergencia)
             {
                 clienteView.ContatosDeEmergencia.Add(new ContatosdeemergenciaView()

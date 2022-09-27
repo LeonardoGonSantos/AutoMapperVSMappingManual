@@ -28,10 +28,12 @@ namespace AutoMapperVSMappingManual._2___Application
         public ClientesViewModel GetClientesMappingManual()
         {
             ClientesViewModel clientes = new ClientesViewModel();
+            clientes.ClientesView = new List<ClienteView>();
 
             foreach (var entity in _clientesEntity.ClientesEntity)
             {
-                clientes.ClientesView.Add(_clienteEntityToClienteView.Create(entity));
+                var result = _clienteEntityToClienteView.Create(entity);
+                clientes.ClientesView.Add(result);
             }
             
             return clientes;
