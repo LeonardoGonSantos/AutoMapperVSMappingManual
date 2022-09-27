@@ -20,9 +20,53 @@ namespace AutoMapperVSMappingManual.Controllers
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            var result = _mapView.GetClientesMappingManual();
+            _mapView.GetClientesMappingManual();
 
-            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString(), result = result });
+            stopwatch.Stop();
+
+            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString() });
+        }
+
+        [HttpGet("RequestTesteMapingManualAsync")]
+        public async Task<IActionResult> RequestTesteMapingManualAsync()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            await _mapView.GetClientesMappingManualAsync();
+
+            stopwatch.Stop();
+
+            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString() });
+        }
+
+        [HttpGet("RequestTesteMapingManual/{countVezes}")]
+        public IActionResult RequestTesteMapingManualComContador([FromRoute] int countVezes)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            for (int i = 0; i < countVezes; i++)
+            {
+                _mapView.GetClientesMappingManual();
+            }
+
+            stopwatch.Stop();
+
+            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString() });
+        }
+
+        [HttpGet("RequestTesteMapingManualAsync/{countVezes}")]
+        public async Task<IActionResult> RequestTesteMapingManualAsyncComContador([FromRoute] int countVezes)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            for (int i = 0; i < countVezes; i++)
+            {
+                await _mapView.GetClientesMappingManualAsync();
+            }
+
+            stopwatch.Stop();
+
+            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString() });
         }
     }
 }

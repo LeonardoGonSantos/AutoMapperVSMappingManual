@@ -26,7 +26,7 @@ namespace AutoMapperVSMappingManual.Controllers
 
             stopwatch.Start();
 
-            var resultAuto = _mapViewAutoMapper.GetClientesAutoMapper();
+            _mapViewAutoMapper.GetClientesAutoMapper();
 
             stopwatch.Stop();
 
@@ -36,13 +36,11 @@ namespace AutoMapperVSMappingManual.Controllers
 
             stopwatch.Restart();
 
-            var resultManual = _mapViewManual.GetClientesMappingManual();
+            _mapViewManual.GetClientesMappingManual();
 
             stopwatch.Stop();
 
             var tempoManual = stopwatch.Elapsed;
-
-
 
 
             return Ok(new { TempoDeExecucaoAuto = tempoAuto.ToString(), TempoDeExecucaoManual = tempoManual });
@@ -55,7 +53,7 @@ namespace AutoMapperVSMappingManual.Controllers
 
             stopwatch.Start();
 
-            var resultAuto = _mapView.GetClientesAutoMapper();
+            _mapView.GetClientesAutoMapper();
 
             var tempoAuto = stopwatch.Elapsed;
 
@@ -64,7 +62,7 @@ namespace AutoMapperVSMappingManual.Controllers
 
             stopwatch.Restart();
 
-            var resultManual = _mapView.GetClientesMappingManual();
+            _mapView.GetClientesMappingManual();
 
             var tempoManual = stopwatch.Elapsed;
 
@@ -82,6 +80,8 @@ namespace AutoMapperVSMappingManual.Controllers
 
             var result = _mapView.GetClientesAutoMapper();
 
+            stopwatch.Stop();
+
             return Ok(new { TempoDeExecucao = stopwatch.Elapsed, result = result });
         }
 
@@ -91,6 +91,8 @@ namespace AutoMapperVSMappingManual.Controllers
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             var result = _mapView.GetClientesMappingManual();
+
+            stopwatch.Stop();
 
             return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString(), result = result });
         }

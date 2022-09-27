@@ -6,6 +6,12 @@ namespace AutoMapperVSMappingManual._2___Application.MappingManual
 {
     public class ClienteEntityToClienteViewModel : IClienteEntityToClienteView
     {
+        private ClienteView _clienteView = new ClienteView();
+        private ParallelOptions _parallelOptions = new()
+        {
+            MaxDegreeOfParallelism = 15
+        };
+
         public ClienteView Create(ClienteEntity clienteEntity)
         {
             ClienteView clienteView = new ClienteView();
@@ -55,6 +61,65 @@ namespace AutoMapperVSMappingManual._2___Application.MappingManual
             }
 
             return clienteView;
+        }
+        public async Task<ClienteView> CreateAsync(ClienteEntity clienteEntity)
+        {
+            _clienteView.Nome = clienteEntity.Nome;
+            _clienteView.Idade = clienteEntity.Idade;
+            _clienteView.Email = clienteEntity.Email;
+            _clienteView.SiatuacaoCiviil = clienteEntity.SiatuacaoCiviil;
+
+            await Task.WhenAll(CreateContatoDeEmergencia(clienteEntity), CreateTelefone(clienteEntity), CreateEndereco(clienteEntity)).ConfigureAwait(false);
+
+            return _clienteView;
+        }
+
+        private async Task CreateContatoDeEmergencia(ClienteEntity clienteEntity)
+        {
+            _clienteView.ContatosDeEmergencia = new List<ContatosdeemergenciaView>();
+
+            await Parallel.ForEachAsync(clienteEntity.ContatosDeEmergencia, _parallelOptions, async (source, token) =>
+            {
+                _clienteView.ContatosDeEmergencia.Add(new ContatosdeemergenciaView()
+                {
+                    DDD = source.DDD,
+                    Nome = source.Nome,
+                    Telefone = source.Telefone
+                });
+            });
+        }        
+        
+        private async Task CreateTelefone(ClienteEntity clienteEntity)
+        {
+            _clienteView.Telefone = new List<TelefoneView>();
+
+            await Parallel.ForEachAsync(clienteEntity.Telefone, _parallelOptions, async (source, token) =>
+            {
+                _clienteView.Telefone.Add(new TelefoneView()
+                {
+                    DDD = source.DDD,
+                    Numero = source.Numero
+                });
+            });
+        }        
+        
+        private async Task CreateEndereco(ClienteEntity clienteEntity)
+        {
+            _clienteView.Endereco = new List<EnderecoView>();
+
+            await Parallel.ForEachAsync(clienteEntity.Endereco, _parallelOptions, async (source, token) =>
+            {
+                _clienteView.Endereco.Add(new EnderecoView()
+                {
+                    Bairro = source.Bairro,
+                    NUmero = source.NUmero,
+                    Cep = source.Cep,
+                    Complemento = source.Complemento,
+                    Estado = source.Estado,
+                    Pais = source.Pais,
+                    Rua = source.Rua
+                });
+            });
         }
     }
 }

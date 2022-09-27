@@ -21,9 +21,26 @@ namespace AutoMapperVSMappingManual.Controllers
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            var result = _mapView.GetClientesAutoMapper();
+            _mapView.GetClientesAutoMapper();
 
-            return Ok(new { TempoDeExecucao = stopwatch.Elapsed, result = result });
+            stopwatch.Stop();
+
+            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString() });
+        }
+
+        [HttpGet("RequestTesteAutomapper/{countVezes}")]
+        public IActionResult RequestTesteAutomapper([FromRoute] int countVezes)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            for (int i = 0; i < countVezes; i++)
+            {
+                _mapView.GetClientesAutoMapper();
+            }
+
+            stopwatch.Stop();
+
+            return Ok(new { TempoDeExecucao = stopwatch.Elapsed.ToString() });
         }
     }
 }

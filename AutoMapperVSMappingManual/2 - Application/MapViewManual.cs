@@ -10,7 +10,11 @@ namespace AutoMapperVSMappingManual._2___Application
     public class MapViewManual : IMapViewManual
     {
         private Clientes _clientesEntity;
-        private IClienteEntityToClienteView _clienteEntityToClienteView;
+        private IClienteEntityToClienteView _clienteEntityToClienteView; 
+        private ParallelOptions _parallelOptions = new()
+        {
+            MaxDegreeOfParallelism = 15
+        };
 
         public MapViewManual(IOptions<Clientes> clientesEntity, IClienteEntityToClienteView clienteEntityToClienteView)
         {
@@ -29,6 +33,19 @@ namespace AutoMapperVSMappingManual._2___Application
                 clientes.ClientesView.Add(result);
             }
             
+            return clientes;
+        }
+
+        public async Task<ClientesViewModel> GetClientesMappingManualAsync()
+        {
+            ClientesViewModel clientes = new ClientesViewModel();
+            clientes.ClientesView = new List<ClienteView>();
+
+            await Parallel.ForEachAsync(_clientesEntity.ClientesEntity, _parallelOptions, async (source, token) =>
+            {
+                clientes.ClientesView.Add(await _clienteEntityToClienteView.CreateAsync(source));
+            });
+
             return clientes;
         }
     }
