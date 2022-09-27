@@ -9,10 +9,43 @@ namespace AutoMapperVSMappingManual.Controllers
     public class PerformanceTesteController : ControllerBase
     {
         private readonly IMapView _mapView;
+        private readonly IMapViewAutoMapper _mapViewAutoMapper;
+        private readonly IMapViewManual _mapViewManual;
 
-        public PerformanceTesteController( IMapView mapView)
+        public PerformanceTesteController(IMapView mapView, IMapViewAutoMapper mapViewAutoMapper, IMapViewManual mapViewManual)
         {
             _mapView = mapView;
+            _mapViewAutoMapper = mapViewAutoMapper;
+            _mapViewManual = mapViewManual;
+        }
+
+        [HttpGet("ComparacaoDeTempoClassSeparadas")]
+        public IActionResult ComparacaoDeTempoClassSeparadas()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            var resultAuto = _mapViewAutoMapper.GetClientesAutoMapper();
+
+            stopwatch.Stop();
+
+            var tempoAuto = stopwatch.Elapsed;
+
+
+
+            stopwatch.Restart();
+
+            var resultManual = _mapViewManual.GetClientesMappingManual();
+
+            stopwatch.Stop();
+
+            var tempoManual = stopwatch.Elapsed;
+
+
+
+
+            return Ok(new { TempoDeExecucaoAuto = tempoAuto.ToString(), TempoDeExecucaoManual = tempoManual });
         }
 
         [HttpGet("ComparacaoDeTempo")]
@@ -22,19 +55,22 @@ namespace AutoMapperVSMappingManual.Controllers
 
             stopwatch.Start();
 
+            var resultAuto = _mapView.GetClientesAutoMapper();
+
+            var tempoAuto = stopwatch.Elapsed;
+
+            stopwatch.Stop();
+
+
+            stopwatch.Restart();
+
             var resultManual = _mapView.GetClientesMappingManual();
 
             var tempoManual = stopwatch.Elapsed;
 
             stopwatch.Stop();
 
-            stopwatch.Restart();
 
-            var resultAuto = _mapView.GetClientesAutoMapper();
-
-            var tempoAuto = stopwatch.Elapsed;
-
-            stopwatch.Stop();
 
             return Ok(new { TempoDeExecucaoAuto = tempoAuto.ToString(), TempoDeExecucaoManual = tempoManual });
         }

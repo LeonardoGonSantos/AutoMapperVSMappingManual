@@ -19,6 +19,8 @@ builder.Services.Configure<Clientes>(builder.Configuration.GetSection("Clientes"
 
 builder.Services.AddScoped<IClienteEntityToClienteView, ClienteEntityToClienteViewModel>();
 builder.Services.AddScoped<IMapView, MapView>();
+builder.Services.AddScoped<IMapViewAutoMapper, MapViewAutoMapper>();
+builder.Services.AddScoped<IMapViewManual, MapViewManual>();
 
 
 var app = builder.Build();
