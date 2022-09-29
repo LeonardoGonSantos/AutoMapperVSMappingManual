@@ -59,10 +59,15 @@ namespace AutoMapperVSMappingManual.Controllers
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
+
+            var tasks = new List<Task>();
+
             for (int i = 0; i < countVezes; i++)
             {
-                await _mapView.GetClientesMappingManualAsync();
+                tasks.Add(_mapView.GetClientesMappingManualAsync());
             }
+
+            await Task.WhenAll(tasks);
 
             stopwatch.Stop();
 

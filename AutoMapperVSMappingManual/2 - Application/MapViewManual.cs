@@ -41,10 +41,12 @@ namespace AutoMapperVSMappingManual._2___Application
             ClientesViewModel clientes = new ClientesViewModel();
             clientes.ClientesView = new List<ClienteView>();
 
-            await Parallel.ForEachAsync(_clientesEntity.ClientesEntity, _parallelOptions, async (source, token) =>
+            var tasks = _clientesEntity.ClientesEntity.Select(async x =>
             {
-                clientes.ClientesView.Add(await _clienteEntityToClienteView.CreateAsync(source));
-            });
+                clientes.ClientesView.Add(await _clienteEntityToClienteView.CreateAsync(x));
+            }).ToList();
+
+            await Task.WhenAll(tasks);
 
             return clientes;
         }
