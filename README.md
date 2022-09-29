@@ -1,1 +1,3 @@
-# AutoMapperVSMappingManual
+# Teste de performance para comparação entre AutoMapper e Mapping manual
+
+Realizei este teste para a escrita e compartilhamento dos resultados em um artigo no medium, caso tenha interesse segue o link ...
